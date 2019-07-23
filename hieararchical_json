@@ -1,0 +1,19 @@
+class ComplexEncoder(json.JSONEncoder):
+    """https://stackoverflow.com/questions/5160077/encoding-nested-python-object-in-json"""
+    def default(self, obj): # pylint: disable = method-hidden
+        if hasattr(obj,'reprJSON'):
+            return obj.reprJSON()
+        else:
+            return json.JSONEncoder.default(self, obj)
+
+
+# In every child object include reprJSON, modify the dict for required variables
+    def reprJSON(self):
+        assert self.pages
+        return dict(file=self.file_dir, highest_level=self.highest_level,
+                    figures_out_range=self.unidentified_figures, pages=self.pages)
+
+# In the highest level(or any other required level) include a toJSON function which initiates the reprJSON of itself as well as its children.
+    def toJSON(self, target):
+        with open(target, 'w') as f:
+            f.write(json.dumps(self.reprJSON(), cls=ComplexEncoder))
