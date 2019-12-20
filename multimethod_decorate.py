@@ -1,3 +1,26 @@
+# Better than above one:
+
+from multipledispatch import dispatch
+
+class A:
+    @dispatch()
+    def print_type(self):
+        print("Empty!")
+
+    @dispatch(tuple)
+    def print_type(self, var):
+        print("It is a tuple!")
+
+    @dispatch(str)
+    def print_type(self, var):
+        print("It is a string!")
+
+a = A()
+a.print_type("asd")
+a.print_type((1,3))
+
+############
+
 import functools
 
 def multidispatch(*types):
