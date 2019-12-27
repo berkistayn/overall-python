@@ -6,6 +6,15 @@ class Worker:
         self.no_bounding_jobs = 0
         self.IsBusy = False
 
+    ### HERE ! This is the decorator, it must be defined in the lines before a call to it.
+    def time_consuming(func): # pylint: disable=no-self-argument
+        def decorate(*args):
+            self = args[0]
+            self.one_more_job()
+            func(*args) # pylint: disable=not-callable
+            self.one_less_job()
+        return decorate
+
     @time_consuming
     def do_work(self):
         for i in range(5):
@@ -23,11 +32,4 @@ class Worker:
     def update_workload(self):
         self.IsBusy = True if self.no_bounding_jobs > 0 else False
 
-### HERE ! Below one is what you come here for
-    def time_consuming(func): # pylint: disable=no-self-argument
-        def decorate(*args):
-            self = args[0]
-            self.one_more_job()
-            func(*args) # pylint: disable=not-callable
-            self.one_less_job()
-        return decorate
+
