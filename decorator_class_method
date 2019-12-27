@@ -1,12 +1,13 @@
 # As an example:
 import time
+import threading
 
 class Worker:
     def __init__(self):
         self.no_bounding_jobs = 0
         self.IsBusy = False
 
-    ### HERE ! This is the decorator, it must be defined in the lines before a call to it.
+    ### HERE ! Below one is what you come here for
     def time_consuming(func): # pylint: disable=no-self-argument
         def decorate(*args):
             self = args[0]
@@ -33,3 +34,15 @@ class Worker:
         self.IsBusy = True if self.no_bounding_jobs > 0 else False
 
 
+def check_business(worker):
+    while True:
+        time.sleep(0.3)
+        print(worker.IsBusy)
+
+w = Worker()
+
+t = threading.Thread(target=check_business, args=[w])
+t.start()
+time.sleep(2)
+
+w.do_work()
