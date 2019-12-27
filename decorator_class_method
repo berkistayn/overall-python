@@ -1,0 +1,33 @@
+# As an example:
+import time
+
+class Worker:
+    def __init__(self):
+        self.no_bounding_jobs = 0
+        self.IsBusy = False
+
+    @time_consuming
+    def do_work(self):
+        for i in range(5):
+            time.sleep(1)
+            print(i)
+
+    def one_more_job(self):
+        self.no_bounding_jobs += 1
+        self.update_workload()
+
+    def one_less_job(self):
+        self.no_bounding_jobs -= 1
+        self.update_workload()
+
+    def update_workload(self):
+        self.IsBusy = True if self.no_bounding_jobs > 0 else False
+
+### HERE ! Below one is what you come here for
+    def time_consuming(func): # pylint: disable=no-self-argument
+        def decorate(*args):
+            self = args[0]
+            self.one_more_job()
+            func(*args) # pylint: disable=not-callable
+            self.one_less_job()
+        return decorate
